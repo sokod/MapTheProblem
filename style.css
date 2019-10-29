@@ -1,0 +1,198 @@
+html, body{
+	padding: 0;
+    margin: -10px 0px 0px 0px;
+    height: 100%;
+    width: 100%;
+    font-family: Arial;
+}
+
+#mapid {
+    width: 100%;
+}
+
+.header {
+	padding: 0;
+	margin: 0;
+	background: #18386b;
+	width: 100%;
+	height: 62px;
+}
+
+.header ul {
+	list-style: none;
+	display: block;
+	margin-right: 10px;
+	margin-top: 0;
+	position: relative;
+}
+
+.header li {
+	float: right;
+	margin-right: 1px;
+	font-size: 16px;
+	max-height: 70px;
+}
+
+.header li a {
+	display: block;
+	min-width: 20px;
+	max-width: 60px;
+	padding: 22px 22px;
+	color: #ffffff;
+	position: relative;
+	text-decoration: none;
+}
+
+.header li a:hover {
+	background: #d2d4dc;
+	color: #18386b;
+}
+
+.logo {
+	display: block;
+	margin-top: 0;
+	margin-left: 0;
+	max-width: 300px;
+}
+
+.logo h2 {
+	padding: 20px 20px;
+	color: #ffffff;
+	position: relative;
+	margin: 0;
+}
+
+.logo img {
+	position: relative;
+	height: 60px;
+	width: auto;
+	float: left;
+	margin-left: 10px;
+}
+
+#loginBar {
+	position: absolute;
+	text-decoration: none;
+	display: none;
+	padding: 10px 10px;
+	width: 100%;
+	height: 30px;
+	margin-top: -2px;
+	background: #ffffff;
+	z-index: 450;
+}
+
+#loginBar input {
+	margin-right: 10px;
+	margin-top: 10;
+	position: relative;
+	width: 150px;
+	height: 25px 
+}
+
+#loginBar a {
+	float: right;
+	display: block;
+	margin-right: 10px;
+	margin-top: 0;
+	position: relative;
+	padding: 5px 10px;
+	color: #18386b;
+	text-decoration: none;
+}
+
+.logBlock {
+	float: right;
+	margin-left: 40px;
+}
+
+#addMarkerPanel {
+	background: #ffffff;
+	color: #000000;
+    width: 300px;
+    position: absolute;
+  	top: 62px;
+  	right: 4px;
+  	border-color: #8e919e;
+  	border-style: solid;
+  	border-width: 1px;
+    border-radius: 10px;
+    padding: 10px 10px 10px 10px; 
+    font-size: 14px;
+    display: none;
+    z-index: 450;
+}
+
+#addMarkerPanel h2, p {
+	margin: 0px 0px 0px 0px;
+}
+
+#addMarkerPanel h2, .page h2{
+	color: #18386b;
+	font-size: 24px;
+}
+
+.form1 p {
+	padding: 2px 0px 2px 0px;
+}
+
+.textInput, .textArea {
+	width: 100%;	
+}
+
+.textInput, .textInput2 {
+	height: 25px;
+}
+
+.textInput2 {
+	margin: 10px 10px 10px 0px;
+}
+
+.inputLabel p {
+	margin: 10px 0px 0px 0px;
+}
+
+.errorLabel p {
+	margin: 10px 0px 0px 0px;
+	color: red;
+}
+
+.button1 a {
+	float: left;
+	display: block;
+	margin: 10px 10px 10px 0px;
+	position: relative;
+	padding: 10px 10px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #18386b;
+	font-size: 16px;
+	color: #18386b;
+	text-decoration: none;
+}
+
+.button1 a:hover {
+	background: #18386b;
+	color: #ffffff;
+}
+
+.fon {
+	display: block;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background: #ccd6d9;
+}
+
+.page {
+	position: absolute;
+	display: block;
+	min-width: 350px;
+	width: 60%;
+	height: 100%;
+	margin: auto;
+	padding: 10px 30px;
+	left: 0;
+	right: 0;
+	background: #ffffff;
+}

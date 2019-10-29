@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="description" content="Sumy volunteer map - registration form">
+	<meta name="keywords" content="">
+	<meta name="author" content="Alex Gerasimenko">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Карта проблем міста Суми</title>
+
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+	<div class="header">
+		<ul>
+			<li id="logButton"><a id="logLink" href="#" style="background: #ffffff; color: #18386b">Профіль</a></li>
+			<li><a href="help.html">Довідка</a></li>
+			<li><a href="index.html">Карта</a></li>
+		</ul>
+		<div class="logo">
+			<img src="images/SiteLogo.png">
+			<h2>MapTheProblem!</h2>
+		</div>
+	</div>
+
+<div class="fon">
+	<div class="page">
+		<hr>
+		<h2>Реєстрація</h2>
+		<script src="scripts/regsubmit.js"></script>
+		<hr><br>
+		<div class="inputLabel">		
+			<p>Ім'я*:</p>
+			<input type="text" id="userName" class="textInput2" value=""></input>
+			<p>Прізвище*:</p>
+			<input type="text" id="userName2" class="textInput2" value=""></input>
+			<p>Електронна пошта*:</p>
+			<input type="email" id="setMail" class="textInput2" value=""></input>
+			<p>Пароль*:</p>
+			<input type="password" id="enterPW" class="textInput2" value=""></input>
+			<p>Повторити пароль*:</p>
+			<input type="password" id="repeatPW" class="textInput2" value=""></input>
+
+			<div class="button1">
+			<a href="#" onclick="submit()">Підтвердити</a>
+			</div>
+			<div style="display: block; height: 50px;"></div>
+			<div id="regError" class="errorLabel">
+				
+			</div>
+			</div>
+	</div>
+</div>
+	
+</body>
+
+</html>
