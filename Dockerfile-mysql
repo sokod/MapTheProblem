@@ -1,5 +1,5 @@
 FROM mysql
 MAINTAINER reOiL Alex MrAres
 COPY ./vsumah.sql /vsumah.sql
-COPY ./mysql-start.sh /mysql-start.sh
-RUN chmod +x /mysql-start.sh
+#COPY ./mysql-start.sh /mysql-start.sh
+#RUN chmod +x /mysql-start.sh
