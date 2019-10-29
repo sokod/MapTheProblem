@@ -1,0 +1,18 @@
+version: "2.4"
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8081"
+    restart: always
+    env_file:
+      - docker.env
+  database:
+    build:
+      context: .
+      dockerfile: Dockerfile-mysql
+    env_file:
+      - docker.env
+    restart: always
