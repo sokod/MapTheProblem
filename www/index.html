@@ -21,7 +21,7 @@
 
 	<div class="header">
 			<ul>
-				<li id="logButton"><a id="logLink" href="#" onclick="showLogBar()">Профіль</a></li>
+				<li id="logButton"><a id="logLink" href="#" onclick="profileLink()">Профіль</a></li>
 				<li><a href="help.html">Довідка</a></li>
 				<li><a href="#" style="background: #ffffff; color: #18386b">Карта</a></li>
 			</ul>
@@ -31,20 +31,20 @@
 			</div>
 	</div>
 
-	<div id="loginBar">
+	<div id="mapid">
+		<script src="scripts/sumymap.js"></script>
+	</div>
+
+	<div id="loginBar" class="loginBar">
 		<script src="scripts/navbar.js"></script>
 		<div>
 			<a href="registration.html">Зареєструватись</a>
-			<a href="#">Увійти</a>
+			<a href="#" onclick="login('loginText','pwText')">Увійти</a>
 		</div>
 		<div class="logBlock">
-			<input type="email" name="loginText" value="Email" onclick="clearText(this)"></input>
-			<input type="password" name="pwText" value="Пароль" onclick="clearText(this)"></input>
+			<input type="email" id="loginText" value="Email" onclick="clearText(this)"></input>
+			<input type="password" id="pwText" value="Пароль" onclick="clearText(this)"></input>
 		</div>
-	</div>
-
-	<div id="mapid">
-		<script src="scripts/sumymap.js"></script>
 	</div>
 
 	<div id="addMarkerPanel">

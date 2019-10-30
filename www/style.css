@@ -70,7 +70,7 @@ html, body{
 	margin-left: 10px;
 }
 
-#loginBar {
+.loginBar {
 	position: absolute;
 	text-decoration: none;
 	display: none;
@@ -82,7 +82,7 @@ html, body{
 	z-index: 450;
 }
 
-#loginBar input {
+.loginBar input {
 	margin-right: 10px;
 	margin-top: 10;
 	position: relative;
@@ -90,7 +90,7 @@ html, body{
 	height: 25px 
 }
 
-#loginBar a {
+.loginBar a {
 	float: right;
 	display: block;
 	margin-right: 10px;

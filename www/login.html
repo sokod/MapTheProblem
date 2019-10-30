@@ -26,17 +26,18 @@
 	</div>
 <div class="fon">
 	<div class="page">
+		<script src="scripts/navbar.js"></script>
 		<hr>
 		<h2>Вхід</h2>
 		<hr><br>
 		<div class="inputLabel">
 			<p>Електронна пошта:</p>
-			<input type="text" name="loginText" class="textInput2"></input>
+			<input type="text" id="loginText" class="textInput2"></input>
 			<p>Пароль:</p>
-			<input type="password" name="pwText" class="textInput2"></input>
+			<input type="password" id="pwText" class="textInput2"></input>
 		</div>
 		<div class="button1">
-			<a href="#">Увійти</a>
+			<a href="#" onclick="login('loginText','pwText')">Увійти</a>
 			<a href="registration.html">Зареєструватись</a>
 		</div>
 	</div>

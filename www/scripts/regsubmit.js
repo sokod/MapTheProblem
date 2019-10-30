@@ -75,7 +75,7 @@ function submit() {
 		xmlhttp.open("POST", "/reg");
 		xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 		xmlhttp.send(JSON.stringify(regData));
-		console.log(JSON.stringify(regData));
+		//console.log(JSON.stringify(regData));
 	}
 	else{
 		document.getElementById("regError").innerHTML = error;

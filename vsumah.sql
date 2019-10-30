@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Окт 29 2019 г., 20:51
+-- Время создания: Окт 29 2019 г., 11:43
 -- Версия сервера: 8.0.18
 -- Версия PHP: 7.2.19-0ubuntu0.18.04.2
 
@@ -42,13 +42,12 @@ CREATE TABLE `marker` (
 --
 
 CREATE TABLE `users` (
-  `password` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `password` varchar(64) NOT NULL,
   `email` varchar(30) NOT NULL,
   `Fname` varchar(15) NOT NULL,
   `Sname` varchar(15) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `online` tinyint(1) NOT NULL DEFAULT '0',
-  `verified` tinyint(1) NOT NULL DEFAULT '0'
+  `online` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
