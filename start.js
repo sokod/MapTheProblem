@@ -1,17 +1,17 @@
-var express = require('express');
-var app = express();
-var mysql = require('mysql');
-var nodemailer = require("nodemailer");
-var crypto = require('crypto');
+let express = require('express');
+let app = express();
+let mysql = require('mysql');
+let nodemailer = require("nodemailer");
+let crypto = require('crypto');
 
 const HTTP_PORT = 8080;
 const DB_PORT = 3306;
 
-var host, port;
+let host, port;
 
 //--set server--
 
-var server = app.listen(HTTP_PORT, function () {
+let server = app.listen(HTTP_PORT, function () {
 
     host = server.address().address
     port = server.address().port
@@ -22,7 +22,7 @@ var server = app.listen(HTTP_PORT, function () {
 
 //--sql connection--
 
-var con = mysql.createConnection({
+let con = mysql.createConnection({
 		  host: 'db4free.net',
 		  user: 'vsumah',
 		  password: 'ghjgbpljy',
@@ -37,7 +37,7 @@ app.use(express.json());
 
 //--SMTP--
 
-var smtpTransport = nodemailer.createTransport({
+let smtpTransport = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,
     secure: true,
@@ -49,8 +49,8 @@ var smtpTransport = nodemailer.createTransport({
         rejectUnauthorized: false
     }
 });
-var rand, mailOptions, link;
-var userdata = {};
+let rand, mailOptions, link;
+let userdata = {};
 //--main requests--
 
 //registration request
@@ -59,12 +59,12 @@ app.post("/reg", function(request, response){
 	//console.log(regData);
 
 	//adding user to db
-	var checkUser = `SELECT COUNT(*) FROM users WHERE email = ?`;
+	let checkUser = `SELECT COUNT(*) FROM users WHERE email = ?`;
 	con.query(checkUser, regData.email, function (err, result) {
 		if (err) throw err;
 		//console.log(result[0]['COUNT(*)']);
 		if (result[0]['COUNT(*)'] < 1 ){
-			var addUser = "INSERT INTO users (password, email, Fname, Sname) VALUES (?, ?, ?, ?)";
+			let addUser = "INSERT INTO users (password, email, Fname, Sname) VALUES (?, ?, ?, ?)";
 			con.query(addUser, [
 				getSHA(regData.password),
 				regData.email,
@@ -78,7 +78,7 @@ app.post("/reg", function(request, response){
 		else response.end("Даний Email вже зареестровано.");
 	});
 
-	//varyfying email
+	//letyfying email
 	rand=Math.floor((Math.random() * 100) + 54);
     host=request.get('host');
     link="http://"+ request.get('host') + "/verify?id=" + rand;
@@ -111,8 +111,8 @@ app.get('/verify',function(req,res){
 	    {
 	        console.log("email is verified");
 
-	        var setVarified = `Update users SET verified = 1 WHERE email = ?`;
-	        con.query(setVarified, mailOptions.to, function (err, result) {
+	        let setletified = `Update users SET verified = 1 WHERE email = ?`;
+	        con.query(setletified, mailOptions.to, function (err, result) {
 			if (err) throw err;
 			console.log("email verified");
 			});
@@ -133,8 +133,8 @@ app.get('/verify',function(req,res){
 
 //login
 app.post("/login", function(request, response){
-	var login = request.body;
-	var checkUser = `SELECT COUNT(*) FROM users WHERE email = ? AND password = ? AND verified = 1`;
+	let login = request.body;
+	let checkUser = `SELECT COUNT(*) FROM users WHERE email = ? AND password = ? AND verified = 1`;
 	con.query(checkUser, [
 			login.email,
 			getSHA(login.password)
@@ -143,7 +143,7 @@ app.post("/login", function(request, response){
 		//console.log(result[0]['COUNT(*)']);
 		if (result[0]['COUNT(*)'] == 1 ){
 			
-			var setOnline = `Update users SET online = 1 WHERE email = ?`;		
+			let setOnline = `Update users SET online = 1 WHERE email = ?`;		
 			con.query(setOnline, login.email, function (err, result) {
 				if (err) throw err;
 				//console.log(login.email + " joined");	
@@ -157,21 +157,21 @@ app.post("/login", function(request, response){
 });
 
 app.get("/isonline", function(request, response){
-	var login = request.body;
+	let login = request.body;
 	userdata[0] = login.email;
-	var checkUser = `SELECT COUNT(*) FROM users WHERE email = ? AND password = ? AND online = 1`;
+	let checkUser = `SELECT COUNT(*) FROM users WHERE email = ? AND password = ? AND online = 1`;
 	con.query(checkUser, [login.email, getSHA(login.password)], function (err, result) {
 		if (err) throw err;
 		//console.log(result[0]['COUNT(*)']);
 		if (result[0]['COUNT(*)'] == 1 ){
 			userdata[1] = true;
-			var getInfo1 = `SELECT (Fname) FROM users WHERE email = ? AND password = ?`;
+			let getInfo1 = `SELECT (Fname) FROM users WHERE email = ? AND password = ?`;
 			con.query(getInfo1, [login.email, getSHA(login.password)],function (err, result1) {
 				if (err) throw err;
 				userdata[2] = result1[0]['Fname'];
 				console.log(userdata[1]);
 			});
-			var getInfo2 = `SELECT (Sname) FROM users WHERE email = ? AND password = ?`;
+			let getInfo2 = `SELECT (Sname) FROM users WHERE email = ? AND password = ?`;
 				con.query(getInfo2, [login.email, getSHA(login.password)], function (err, result2) {
 				if (err) throw err;
 				userdata[3] = result2[0]['Sname'];
@@ -195,27 +195,46 @@ app.get("/getmarkers", function(request, response){
 			});
 });
 
+//load one marker
+app.post("/onemarker", function(request, response){
+	let search = request.body;
+	console.log(search.user_id);
+	let marker = {};
+	con.query(`SELECT Sname, Fname FROM users WHERE user_id = ?`, 
+		search.user_id, 
+		function (err, result){
+			if (err) throw err;
+			console.log(result);
+			marker.sname = result[0]['Sname'];
+			marker.fname = result[0]['Fname'];
+			con.query(`SELECT description FROM marker WHERE marker_id = ?`, 
+				search.marker_id, 
+				function (err, result){
+					if (err) throw err;
+					marker.description = result[0]['description'];
+					console.log(JSON.stringify(marker));
+					response.end(JSON.stringify(marker));
+				});
+		});
+});
+
 //add markers
 app.post("/addmarker", function(request, response){
-	var marker = request.body;
+	let marker = request.body;
 	//console.log(marker);
-	con.query("SELECT user_id FROM users WHERE email = ?", marker.email,
-		function (err, result_id){
-		if (err) throw err;
-		//console.log(result_id[0]['user_id']);
-		con.query("INSERT INTO marker (position, description, user_id, title)" + 
-			" VALUES (point(?, ?), ?, ?, ?)",
-			[
-				marker.lat,
-				marker.lng,
-				marker.desc,
-				result_id[0]['user_id'],
-				marker.name
-			],
-			function (err, result){
-				if (err) throw err;
-				response.end("")
-			});
+	//console.log(result_id[0]['user_id']);
+	con.query("INSERT INTO marker (position, description, user_id, title)" + 
+		" VALUES (point(?, ?), ?, ?, ?)",
+		[
+			marker.lat,
+			marker.lng,
+			marker.desc,
+			marker.user_id,
+			marker.name
+		],
+		function (err, result){
+			if (err) throw err;
+			response.end("")
 	});
 
 });
@@ -224,7 +243,7 @@ app.post("/addmarker", function(request, response){
 
 //get password hash
 function getSHA(pwd) {
-	var hash = crypto.createHash('sha256').update(pwd).digest('base64');
+	let hash = crypto.createHash('sha256').update(pwd).digest('base64');
 	return hash;
 }
 

@@ -53,21 +53,38 @@
 			<p id="latlng1"></p>
 			<hr></hr>
 			<div  class="form1" id="addingForm">
-				<p>Назва проблеми:</p>
-				<p><input type="text" id="markerName" maxlength="30" class="textInput"></p>
-				<p>Опис проблеми: </p>
-				<p><textarea type="text" id="markerDesc" maxlength="200" cols="36" rows="7" class="textArea"></textarea></p>
-				<p>*Обмеження 200 символів</p>
-				<hr>
-				<div class="button1">
-					<a href="#" onclick="saveMarker(this)">Додати</a>
-				</div>
-				<div style="display: block; height: 50px;"></div>
-				<div id="addError" class="errorLabel">
+			<p>Назва проблеми:</p>
+			<p><input type="text" id="markerName" maxlength="30" class="textInput"></p>
+			<p>Опис проблеми: </p>
+			<p><textarea type="text" id="markerDesc" maxlength="200" cols="36" rows="7" class="textArea"></textarea></p>
+			<p>*Обмеження 200 символів</p>
+			<hr>
+			<div class="button1">
+				<a href="#" onclick="saveMarker(this)">Додати</a>
+			</div>
+			<div style="display: block; height: 50px;"></div>
+			<div id="addError" class="errorLabel">
 					
-				</div>
-				</div>
+			</div>
 			</div>
 		</div>
+	</div>
+
+	<div id="showMarkerPanel">
+		<h2 id="markerTitle"></h1>
+		<p>Координати: </p>
+		<p id="latlng2"></p>
+		<hr></hr>
+		<div>
+			<p>Опис проблеми:</p>
+			<p id="showDescription"></p>
+			<p>Автор:</p>
+			<p id="showAuthor"></p>
+		</div>
+		<hr>
+		<div class="button1">
+			<a id="delBtn" href="#" onclick="">Видалити маркер</a>
+		</div>
+	</div>
 </body>
 </html>
