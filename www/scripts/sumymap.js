@@ -27,7 +27,7 @@ window.addEventListener('resize', function(event){
 //--functions--
 //Move zoom focus from marker begore adding overlay
 L.Map.prototype.setViewOffset = function (latlng, offset, targetZoom) {
-    let targetPoint = this.project(latlng, targetZoom).subtract(offset),
+    var targetPoint = this.project(latlng, targetZoom).subtract(offset),
     targetLatLng = this.unproject(targetPoint, targetZoom);
     return this.setView(targetLatLng, targetZoom);
 }
@@ -53,7 +53,6 @@ function isPointInMap(point){
 //Turn off all map overlays
 function offAllOverlays(){
 	document.getElementById("addMarkerPanel").style.display = "none";
-	document.getElementById("showMarkerPanel").style.display = "none";
 	document.getElementById("loginBar").style.display = "none";
 
 	/*document.getElementById("logButton").style.background = "#18386b";
@@ -73,7 +72,7 @@ function updateMarkers(){
 	xmlhttp.responseType = "text";
 	xmlhttp.onreadystatechange = function() {
 		        if (this.readyState == 4 && this.status == 200) {
-		        	//console.log(this.responseText);
+		        	console.log(this.responseText);
 		            let mList = JSON.parse(this.responseText);
 		            //console.log(mList);
 		            //loadind markers to map
@@ -81,8 +80,8 @@ function updateMarkers(){
 		            	//console.log(mList[i]);
 		            	let marker = L.marker(L.latLng(mList[i].position.x, mList[i].position.y));
 		            	marker.title = mList[i].title;
-		            	marker.user_id = mList[i].user_id;
-		            	marker.marker_id = mList[i].marker_id;
+		            	marker.user_id_ = mList[i].user_id;
+		            	marker.marker_id_ = mList[i].marker_id;
 
 		            	//popup
 		            	marker.bindPopup(marker.title);
@@ -92,11 +91,6 @@ function updateMarkers(){
 				        marker.on('mouseout', function (e) {
 							this.closePopup();
 				        });
-				        //click
-				        marker.on('click', function (e) {
-							showMarkerInfo(this);
-				        });
-
 		            	marker.addTo(markers);
 		            	//console.log("+1");
 		            }
@@ -105,28 +99,6 @@ function updateMarkers(){
 		    }
 	xmlhttp.open("GET", "/getmarkers");
 	xmlhttp.send( null );
-}
-
-//show specific marker
-function showMarkerInfo(marker){
-	//form request
-	let req = {};
-	req.marker_id = marker.marker_id;
-	req.user_id = marker.user_id;
-	let xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
-	xmlhttp.responseType = "text";
-	xmlhttp.onreadystatechange = function() {
-		        if (this.readyState == 4 && this.status == 200) {
-		        	//console.log(this.responseText);
-		        	let mInfo = JSON.parse(this.responseText);
-		        	//put data in html
-					document.getElementById("showMarkerPanel").style.display = "block";
-					document.getElementById("showDescription").innerHTML = mInfo.description;
-					document.getElementById("showAuthor").innerHTML = mInfo.sname + " " mInfo.fname;	            
-		        }
-		    }
-	xmlhttp.open("GET", "/onemarker");
-	xmlhttp.send(JSON.stringify(req));
 }
 
 //Place marker and start adding problem (right mouse handler)

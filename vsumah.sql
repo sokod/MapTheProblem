@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Окт 31 2019 г., 17:53
+-- Время создания: Окт 31 2019 г., 21:55
 -- Версия сервера: 8.0.18
 -- Версия PHP: 7.2.24-0ubuntu0.18.04.1
 
@@ -41,9 +41,10 @@ CREATE TABLE `marker` (
 --
 
 INSERT INTO `marker` (`marker_id`, `position`, `description`, `user_id`, `title`) VALUES
-(1, 0x000000000101000000333333333333f33fcdccccccccccf43f, 'test', 17, NULL),
-(2, 0x000000000101000000333333333333f33fcdccccccccccf43f, 'test', 15, NULL),
-(3, 0x000000000101000000333333333333f33fcdccccccccccf43f, 'test', 17, NULL);
+(14, 0x000000000101000000340a8f86c074494001000060ec654140, 'labu-labu-dab-da!', 17, '228'),
+(20, 0x000000000101000000ccf7a4b12c754940010000e0f4644140, '789', 17, '456'),
+(21, 0x0000000001010000006485d972fd73494001000020a6644140, 'tttttyyyyyyyyy!', 17, 'qqwweer'),
+(22, 0x000000000101000000181771bf39744940010000201f644140, '868', 17, '567');
 
 -- --------------------------------------------------------
 
@@ -94,7 +95,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `marker`
 --
 ALTER TABLE `marker`
-  MODIFY `marker_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `marker_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
