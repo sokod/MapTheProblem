@@ -106,7 +106,7 @@ html, body{
 	margin-left: 40px;
 }
 
-#addMarkerPanel {
+#addMarkerPanel, #showMarkerPanel {
 	background: #ffffff;
 	color: #000000;
     width: 300px;
@@ -123,11 +123,11 @@ html, body{
     z-index: 450;
 }
 
-#addMarkerPanel h2, p {
+#addMarkerPanel, #showMarkerPanel h2, p {
 	margin: 0px 0px 0px 0px;
 }
 
-#addMarkerPanel h2, .page h2{
+#addMarkerPanel h2, #showMarkerPanel h2, .page h2{
 	color: #18386b;
 	font-size: 24px;
 }

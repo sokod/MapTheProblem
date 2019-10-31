@@ -64,14 +64,16 @@ function submit() {
 		regData.firstName = name1.value;
 		regData.secondName = name2.value;
 		regData.password = pw1.value;
-		let xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
+		let xmlhttp = new XMLHttpRequest();
+		//here responsetext containes error description
 		xmlhttp.responseType = "text";
 		xmlhttp.onreadystatechange = function() {
-	        //if (this.readyState == 4 && this.status == 200) {
+	        if (this.readyState == 4 && this.status == 200) {
 	            console.log(this.responseText);
 	            document.getElementById("regError")
 				.innerHTML = "<p>"+ this.responseText +"</p>";
 	        }
+	    }
 		xmlhttp.open("POST", "/reg");
 		xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 		xmlhttp.send(JSON.stringify(regData));

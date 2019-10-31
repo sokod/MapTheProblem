@@ -9,6 +9,8 @@ let map = L.map('mapid',{
 	maxBounds: L.latLngBounds([50.97, 34.68], [50.85, 34.91]),
 	minZoom: 13,
 });
+let markers = L.layerGroup();
+updateMarkers();
 
 //--main--
 document.getElementById("mapid").style.height = String(window.innerHeight - 60) + 'px';
@@ -25,13 +27,13 @@ window.addEventListener('resize', function(event){
 //--functions--
 //Move zoom focus from marker begore adding overlay
 L.Map.prototype.setViewOffset = function (latlng, offset, targetZoom) {
-    var targetPoint = this.project(latlng, targetZoom).subtract(offset),
+    let targetPoint = this.project(latlng, targetZoom).subtract(offset),
     targetLatLng = this.unproject(targetPoint, targetZoom);
     return this.setView(targetLatLng, targetZoom);
 }
 
 //Change map interaction area
-function setMapClickArea (corner1, corner2) {
+function setMapClickArea(corner1, corner2){
 	if( typeof corner1 !== 'undefined' && typeof corner2 !== 'undefined')
 	{
 			left_corner = corner1;
@@ -42,15 +44,16 @@ function setMapClickArea (corner1, corner2) {
 }
 
 //Check if point is in interaction area
-function isPointInMap (point) {
+function isPointInMap(point){
 	if (right_corner.contains(point) && point.contains(left_corner))
 		return true;
 	else return false;
 }
 
 //Turn off all map overlays
-function offAllOverlays () {
+function offAllOverlays(){
 	document.getElementById("addMarkerPanel").style.display = "none";
+	document.getElementById("showMarkerPanel").style.display = "none";
 	document.getElementById("loginBar").style.display = "none";
 
 	/*document.getElementById("logButton").style.background = "#18386b";
@@ -61,8 +64,73 @@ function offAllOverlays () {
 	map.invalidateSize()
 }
 
+//load/update markers
+function updateMarkers(){
+	//clean markers
+	markers.clearLayers();
+
+	let xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
+	xmlhttp.responseType = "text";
+	xmlhttp.onreadystatechange = function() {
+		        if (this.readyState == 4 && this.status == 200) {
+		        	//console.log(this.responseText);
+		            let mList = JSON.parse(this.responseText);
+		            //console.log(mList);
+		            //loadind markers to map
+		            for (let i = 0; i < mList.length; i++){
+		            	//console.log(mList[i]);
+		            	let marker = L.marker(L.latLng(mList[i].position.x, mList[i].position.y));
+		            	marker.title = mList[i].title;
+		            	marker.user_id = mList[i].user_id;
+		            	marker.marker_id = mList[i].marker_id;
+
+		            	//popup
+		            	marker.bindPopup(marker.title);
+				        marker.on('mouseover', function (e) {
+							this.openPopup();
+				        });
+				        marker.on('mouseout', function (e) {
+							this.closePopup();
+				        });
+				        //click
+				        marker.on('click', function (e) {
+							showMarkerInfo(this);
+				        });
+
+		            	marker.addTo(markers);
+		            	//console.log("+1");
+		            }
+		            markers.addTo(map);
+		        }
+		    }
+	xmlhttp.open("GET", "/getmarkers");
+	xmlhttp.send( null );
+}
+
+//show specific marker
+function showMarkerInfo(marker){
+	//form request
+	let req = {};
+	req.marker_id = marker.marker_id;
+	req.user_id = marker.user_id;
+	let xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
+	xmlhttp.responseType = "text";
+	xmlhttp.onreadystatechange = function() {
+		        if (this.readyState == 4 && this.status == 200) {
+		        	//console.log(this.responseText);
+		        	let mInfo = JSON.parse(this.responseText);
+		        	//put data in html
+					document.getElementById("showMarkerPanel").style.display = "block";
+					document.getElementById("showDescription").innerHTML = mInfo.description;
+					document.getElementById("showAuthor").innerHTML = mInfo.sname + " " mInfo.fname;	            
+		        }
+		    }
+	xmlhttp.open("GET", "/onemarker");
+	xmlhttp.send(JSON.stringify(req));
+}
+
 //Place marker and start adding problem (right mouse handler)
-function startAdding (e) {
+function startAdding(e){
 	/*
 	console.log('left ' + left_corner);
 	console.log('right ' + right_corner);
@@ -89,15 +157,54 @@ function startAdding (e) {
 }
 
 //Cancel adding problem (left mouse handler)
-function stopAdding (e) {
+function stopAdding(e){
 	if (isPointInMap(e.containerPoint))
 	{
-		//hide overlay
+		_stopAdding();
+	}
+}
+
+function _stopAdding(){
+	//hide overlay
 		offAllOverlays();
 		//set current map area size
 		setMapClickArea(left_corner, 
 			L.point(window.innerWidth, window.innerHeight));
 		//remove marker
 		addMarker.remove();
-	}
+}
+
+function saveMarker(e){
+	if (addMarker != null){
+		let mName = document.getElementById("markerName").value;
+		let mDesc = document.getElementById("markerDesc").value;
+		let error = "";
+		if (mName != "" && mDesc != ""){
+			let data = {};
+			data.lat = addMarker.getLatLng().lat;
+			data.lng = addMarker.getLatLng().lng;
+			data.name = mName;
+			data.desc = mDesc;
+			data.email = "sanyok.ua.sumy@gmail.com";
+
+			let xmlhttp = new XMLHttpRequest();   
+			xmlhttp.responseType = "text";
+			//here responsetext containes error description
+			xmlhttp.onreadystatechange = function() {
+		        if (this.readyState == 4 && this.status == 200) {
+		            if (this.responseText == ""){
+		            	_stopAdding();
+		            	updateMarkers();
+		            }
+		          	else error += "<p>" + this.responseText + "</p>";
+		        }
+		    }
+			xmlhttp.open("POST", "/addmarker");
+			xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+			xmlhttp.send(JSON.stringify(data));
+			console.log(JSON.stringify(data));
+		}
+		else error += "<p>-Ви не заповнили всі поля</p>";
+		document.getElementById("addError").innerHTML = error;
+	}	
 }

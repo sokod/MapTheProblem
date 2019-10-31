@@ -71,7 +71,7 @@ function isOnline() {
 
 		        } else alert(this.responseText);}
 		    }
-		xmlhttp.open("POST", "/login");
+		xmlhttp.open("GET", "/login");
 		xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 		xmlhttp.send(JSON.stringify(logData));
 		//console.log(JSON.stringify(regData));
