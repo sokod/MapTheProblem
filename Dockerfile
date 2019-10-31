@@ -1,4 +1,4 @@
-FROM node:12.13
+FROM node:12.13-slim
 MAINTAINER reOiL Alex MrAres
 COPY . /app
 WORKDIR /app
