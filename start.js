@@ -223,22 +223,27 @@ app.post("/onemarker", function(request, response){
 //add markers
 app.post("/addmarker", function(request, response){
 	let marker = request.body;
+	marker.token = marker.token.replace(/"/g, '');
 	//console.log(marker);
-	//console.log(result_id[0]['user_id']);
-	con.query("INSERT INTO marker (position, description, user_id, title)" + 
-		" VALUES (point(?, ?), ?, ?, ?)",
-		[
-			marker.lat,
-			marker.lng,
-			marker.desc,
-			marker.user_id,
-			marker.name
-		],
-		function (err, result){
-			if (err) throw err;
-			response.end("")
+	
+	con.query(`SELECT user_id FROM users WHERE online = ?`, 
+		marker.token, 
+		function (err, result1){
+			console.log(result1);
+		con.query("INSERT INTO marker (position, description, user_id, title)" + 
+			" VALUES (point(?, ?), ?, ?, ?)",
+			[
+				marker.lat,
+				marker.lng,
+				marker.desc,
+				result1[0]['user_id'],
+				marker.name
+			],
+			function (err, result){
+				if (err) throw err;
+				response.end("")
+		});
 	});
-
 });
 
 //load one marker

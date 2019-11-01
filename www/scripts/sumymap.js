@@ -217,7 +217,7 @@ function saveMarker(e){
 			data.desc = mDesc;
 
 			//TODO: implement cookies
-			data.user_id = 17;
+			data.token = getCookie("token");
 
 			let xmlhttp = new XMLHttpRequest();   
 			xmlhttp.responseType = "text";
