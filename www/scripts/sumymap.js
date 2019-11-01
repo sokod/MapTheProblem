@@ -11,6 +11,8 @@ let map = L.map('mapid',{
 });
 let markers = L.layerGroup();
 updateMarkers();
+isOnline();
+
 
 //--main--
 document.getElementById("mapid").style.height = String(window.innerHeight - 60) + 'px';
@@ -96,7 +98,7 @@ function updateMarkers(){
 				        marker.on('click', function (e) {
 							showMarkerInfo(this);
 				        });
-
+				        
 		            	marker.addTo(markers);
 		            	//console.log("+1");
 		            }
@@ -118,7 +120,7 @@ function showMarkerInfo(marker){
 	xmlhttp.responseType = "text";
 	xmlhttp.onreadystatechange = function() {
 		        if (this.readyState == 4 && this.status == 200) {
-		        	console.log(this.responseText);
+		        	//console.log(this.responseText);
 		        	let mInfo = JSON.parse(this.responseText);
 		        	//put data in html
 					//zoom	
@@ -138,11 +140,14 @@ function showMarkerInfo(marker){
 					document.getElementById("showAuthor").innerHTML = mInfo.sname + " " + mInfo.fname;
 					
 					//TODO: implement cookies
-					let current = 17;
-					if (req.user_id == current){
+					let current = getCookie("token").replace(/"/g, '');
+					console.log(mInfo, current);
+					if (mInfo.online == current){
 						document.getElementById("delBtn").style.display = "block";
+						document.getElementById("delBtn").addEventListener('click', function(e){removeMarker(marker);});
 					} else{
 						document.getElementById("delBtn").style.display = "none";
+						document.getElementById("delBtn").onclick = null;
 					}	            
 		        }
 		    }
@@ -234,4 +239,31 @@ function saveMarker(e){
 		else error += "<p>-Ви не заповнили всі поля</p>";
 		document.getElementById("addError").innerHTML = error;
 	}	
+}
+
+function removeMarker(marker){
+	if (marker != null){
+		let req = {};
+		req.marker_id = marker.marker_id;
+		req.token = getCookie("token");
+		//req.token.replace("\"","");
+		console.log(marker);
+		let xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
+		xmlhttp.responseType = "text";
+		xmlhttp.onreadystatechange = function() {
+			        if (this.readyState == 4 && this.status == 200) {
+			        	//console.log(this.responseText);
+			        	if(this.responseText != ""){
+			        		offAllOverlays();
+			        		marker.remove();
+			        	}
+			        	else alert("Не вдалося видалити маркер");
+						
+						//show coordinates            
+			        }
+			    }
+		xmlhttp.open("POST", "/removemarker");
+		xmlhttp.setRequestHeader("Content-Type", "application/json");
+		xmlhttp.send(JSON.stringify(req));
+		}	
 }

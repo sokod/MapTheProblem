@@ -16,12 +16,14 @@
    	<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
    	integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
    	crossorigin=""></script>
+
+   	<script src="scripts/navbar.js"></script>
 </head>
 <body>
 
 	<div class="header">
 			<ul>
-				<li id="logButton"><a id="logLink" href="#" onclick="profileLink()">Профіль</a></li>
+				<li id="logButton"><a id="logLink" href="/login.html" >Профіль</a></li>
 				<li><a href="help.html">Довідка</a></li>
 				<li><a href="#" style="background: #ffffff; color: #18386b">Карта</a></li>
 			</ul>
@@ -30,13 +32,11 @@
 				<h2>MapTheProblem!</h2>
 			</div>
 	</div>
-
-	<div id="mapid">
+	<div id="mapid" onload="isOnline()">
 		<script src="scripts/sumymap.js"></script>
 	</div>
 
 	<div id="loginBar" class="loginBar">
-		<script src="scripts/navbar.js"></script>
 		<div>
 			<a href="registration.html">Зареєструватись</a>
 			<a href="#" onclick="login('loginText','pwText')">Увійти</a>
@@ -77,13 +77,13 @@
 		<hr></hr>
 		<div>
 			<p>Опис проблеми:</p>
-			<p id="showDescription"></p>
+			<p><textarea readonly type="text" id="showDescription" maxlength="200" cols="36" rows="7" class="textArea"></textarea></p>
 			<p>Автор:</p>
 			<p id="showAuthor"></p>
 		</div>
 		<hr>
 		<div class="button1">
-			<a id="delBtn" href="#" onclick="">Видалити маркер</a>
+			<a id="delBtn" href="#">Видалити маркер</a>
 		</div>
 	</div>
 </body>

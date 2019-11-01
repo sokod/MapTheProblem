@@ -64,15 +64,16 @@ app.post("/reg", function(request, response){
 		if (err) throw err;
 		//console.log(result[0]['COUNT(*)']);
 		if (result[0]['COUNT(*)'] < 1 ){
-			let addUser = "INSERT INTO users (password, email, Fname, Sname) VALUES (?, ?, ?, ?)";
+			let addUser = "INSERT INTO users (password, email, Fname, Sname, online) VALUES (?, ?, ?, ?, ?)";
 			con.query(addUser, [
 				getSHA(regData.password),
 				regData.email,
 				regData.firstName,
-				regData.secondName
+				regData.secondName,
+				'0',
 			], function (err, result) {
 				if (err) throw err;
-				console.log("1 record inserted");
+				//console.log("1 record inserted");
 			});
 		}
 		else response.end("Даний Email вже зареестровано.");
@@ -89,13 +90,13 @@ app.post("/reg", function(request, response){
         html : "Hello,<br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>"
     }
     mailOptions.to = regData.email;
-    console.log(mailOptions);
+    //console.log(mailOptions);
     smtpTransport.sendMail(mailOptions, function(error, res){
 	    if(error){
-	        console.log(error);
+	        //console.log(error);
 	        response.end("Не вдалося відправити email для підтверження.");
 	    }else{
-	        console.log("Message sent: " + response.message);
+	        //console.log("Message sent: " + response.message);
 	        response.end("На ваш email відправлено посилання для підтверження.");
 	    }
 });
@@ -103,25 +104,25 @@ app.post("/reg", function(request, response){
 
 //verify email
 app.get('/verify',function(req,res){
-	console.log(req.protocol+":/"+host);
+	//console.log(req.protocol+":/"+host);
 	if((req.protocol+"://"+host)==("http://"+host))
 	{
-	    console.log("Domain is matched. Information is from Authentic email");
+	    //console.log("Domain is matched. Information is from Authentic email");
 	    if(req.query.id==rand)
 	    {
-	        console.log("email is verified");
+	        //console.log("email is verified");
 
 	        let setletified = `Update users SET verified = 1 WHERE email = ?`;
 	        con.query(setletified, mailOptions.to, function (err, result) {
 			if (err) throw err;
-			console.log("email verified");
+			//console.log("email verified");
 			});
 
 	        res.end("Email "+mailOptions.to+" is been Successfully verified");
 	    }
 	    else
 	    {
-	        console.log("email is not verified");
+	        //console.log("email is not verified");
 	        res.end("Bad Request");
 	    }
 	}
@@ -134,53 +135,53 @@ app.get('/verify',function(req,res){
 //login
 app.post("/login", function(request, response){
 	let login = request.body;
-	let checkUser = `SELECT COUNT(*) FROM users WHERE email = ? AND password = ? AND verified = 1`;
+	let checkUser = `SELECT user_id FROM users WHERE email = ? AND password = ? AND verified = 1`;
 	con.query(checkUser, [
 			login.email,
 			getSHA(login.password)
-		], function (err, result) {
+		], function (err, result1) {
 		if (err) throw err;
 		//console.log(result[0]['COUNT(*)']);
-		if (result[0]['COUNT(*)'] == 1 ){
-			
-			let setOnline = `Update users SET online = 1 WHERE email = ?`;		
-			con.query(setOnline, login.email, function (err, result) {
+		if (result1.length > 0 ){
+			//console.log(result[0]['user_id']);
+			let setOnline = `Update users SET online = ? WHERE email = ?`;		
+			con.query(setOnline, [getSHA(String(result1[0]['user_id'])), login.email], function (err, result) {
 				if (err) throw err;
 				//console.log(login.email + " joined");	
+				//console.log(1);
+				response.end(JSON.stringify(getSHA(String(result1[0]['user_id']))));
 			});
 			
-			console.log(1);
-			response.end(JSON.stringify(userdata));
 		}
 		else response.end("Неправильний email фбо пароль.");
 	});
 });
 
-app.get("/isonline", function(request, response){
+//is online
+app.post("/isonline", function(request, response){
 	let login = request.body;
-	userdata[0] = login.email;
-	let checkUser = `SELECT COUNT(*) FROM users WHERE email = ? AND password = ? AND online = 1`;
-	con.query(checkUser, [login.email, getSHA(login.password)], function (err, result) {
+	console.log(request.body);
+	let user = {isOnline: false, Fname: "", Sname: ""};
+	let checkUser = `SELECT COUNT(*) FROM users WHERE online = ?`;
+	if (login.token.length == 64) con.query(checkUser, login.token, function (err, result) {
 		if (err) throw err;
-		//console.log(result[0]['COUNT(*)']);
+		console.log(result[0]['COUNT(*)']);
 		if (result[0]['COUNT(*)'] == 1 ){
-			userdata[1] = true;
-			let getInfo1 = `SELECT (Fname) FROM users WHERE email = ? AND password = ?`;
-			con.query(getInfo1, [login.email, getSHA(login.password)],function (err, result1) {
+			user.isOnline = true;
+			let getInfo1 = `SELECT (Fname) FROM users WHERE online = ?`;
+			con.query(getInfo1, login.token, function (err, result1) {
 				if (err) throw err;
-				userdata[2] = result1[0]['Fname'];
-				console.log(userdata[1]);
+				user.Fname = result1[0]['Fname'];
+				let getInfo2 = `SELECT (Sname) FROM users WHERE online = ?`;
+					con.query(getInfo2, login.token, function (err, result2) {
+					if (err) throw err;
+					user.Sname = result2[0]['Sname'];
+					response.end(JSON.stringify(userdata));
+				});		
 			});
-			let getInfo2 = `SELECT (Sname) FROM users WHERE email = ? AND password = ?`;
-				con.query(getInfo2, [login.email, getSHA(login.password)], function (err, result2) {
-				if (err) throw err;
-				userdata[3] = result2[0]['Sname'];
-				console.log(userdata[2]);
-			});	
-			
-		} else userdata[1] = false;
-		response.end(JSON.stringify(userdata));
+		}
 	});
+	response.end(null);
 });
 
 //--marker functions--
@@ -198,21 +199,22 @@ app.get("/getmarkers", function(request, response){
 //load one marker
 app.post("/onemarker", function(request, response){
 	let search = request.body;
-	console.log(search.user_id);
+	//console.log(search.user_id);
 	let marker = {};
-	con.query(`SELECT Sname, Fname FROM users WHERE user_id = ?`, 
+	con.query(`SELECT Sname, Fname, online FROM users WHERE user_id = ?`, 
 		search.user_id, 
 		function (err, result){
 			if (err) throw err;
-			console.log(result);
+			//console.log(result);
 			marker.sname = result[0]['Sname'];
 			marker.fname = result[0]['Fname'];
+			marker.online = result[0]['online'];
 			con.query(`SELECT description FROM marker WHERE marker_id = ?`, 
 				search.marker_id, 
 				function (err, result){
 					if (err) throw err;
 					marker.description = result[0]['description'];
-					console.log(JSON.stringify(marker));
+					//console.log(JSON.stringify(marker));
 					response.end(JSON.stringify(marker));
 				});
 		});
@@ -239,14 +241,40 @@ app.post("/addmarker", function(request, response){
 
 });
 
+//load one marker
+app.post("/removemarker", function(request, response){
+	let marker ={};
+	marker = request.body;
+	marker.token = marker.token.replace(/"/g, '');
+	console.log(marker);
+	con.query(`SELECT user_id FROM users WHERE online = ?`, 
+		marker.token, 
+		function (err, result1){
+			if (err) throw err;
+			console.log(result1);
+			if (result1.length > 0 ){
+			//console.log(result);
+			marker.user_id = result1[0]['user_id'];
+			con.query(`DELETE FROM marker WHERE marker_id = ? AND user_id = ?`, 
+				[marker.marker_id, marker.user_id], 
+				function (err, result2){
+					if (err) throw err;
+					//console.log(JSON.stringify(marker));
+					response.end(JSON.stringify(marker.marker_id));
+				});
+			}
+			else response.end("");
+			});
+});
+
 //--aditional functions--
 
 //get password hash
+
 function getSHA(pwd) {
 	let hash = crypto.createHash('sha256').update(pwd).digest('base64');
 	return hash;
 }
-
 
 //--process termination--
 
